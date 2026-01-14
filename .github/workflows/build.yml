@@ -36,28 +36,40 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
-      - name: Archive App (Release)
+      - name: Build for Device (Unsigned)
         if: github.event_name == 'workflow_dispatch'
         run: |
-          xcodebuild archive \
+          xcodebuild build \
             -project SpectreIOS.xcodeproj \
             -scheme SpectreIOS \
-            -destination 'generic/platform=iOS Simulator' \
-            -archivePath build/SpectreIOS.xcarchive \
+            -destination 'generic/platform=iOS' \
             -configuration Release \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            SKIP_INSTALL=NO
+            | xcpretty
 
-      - name: Export App
+      - name: Create IPA
         if: github.event_name == 'workflow_dispatch'
         run: |
-          mkdir -p build/app
-          cp -r build/SpectreIOS.xcarchive/Products/Applications/*.app build/app/ || true
+          mkdir -p build/Payload
+          cp -r build/DerivedData/Build/Products/Release-iphoneos/SpectreIOS.app build/Payload/
+          cd build && zip -r SpectreIOS.ipa Payload
+          ls -la
 
-      - name: Upload Artifact
+      - name: Upload IPA
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpectreIOS-IPA
+          path: build/SpectreIOS.ipa
+          retention-days: 30
+
+      - name: Upload Simulator App
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: SpectreIOS-Simulator
-          path: build/app/
+          path: build/DerivedData/Build/Products/Debug-iphonesimulator/SpectreIOS.app
           retention-days: 7

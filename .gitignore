@@ -1,0 +1,41 @@
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+build/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# macOS
+.DS_Store
+*.swp
+*~.nib
+
+# AppCode
+.idea/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# CocoaPods (if used later)
+Pods/
+*.xcworkspace
+Podfile.lock
+
+# Carthage (if used later)
+Carthage/Build/
+
+# Code Injection
+iOSInjectionProject/

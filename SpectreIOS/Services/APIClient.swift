@@ -13,6 +13,8 @@ actor APIClient {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(AppSettings.cfAccessClientId, forHTTPHeaderField: "CF-Access-Client-Id")
+        request.setValue(AppSettings.cfAccessClientSecret, forHTTPHeaderField: "CF-Access-Client-Secret")
 
         let (data, response) = try await session.data(for: request)
 
@@ -42,6 +44,8 @@ actor APIClient {
         request.httpBody = bodyString.data(using: .utf8)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(AppSettings.cfAccessClientId, forHTTPHeaderField: "CF-Access-Client-Id")
+        request.setValue(AppSettings.cfAccessClientSecret, forHTTPHeaderField: "CF-Access-Client-Secret")
 
         let (data, response) = try await session.data(for: request)
 

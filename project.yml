@@ -48,3 +48,4 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
+          NSAllowsArbitraryLoads: true

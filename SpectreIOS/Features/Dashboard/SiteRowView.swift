@@ -9,6 +9,7 @@ struct SiteRowView: View {
                 Text(site.site)
                     .font(.body)
                     .fontWeight(.medium)
+                    .foregroundColor(.spectreText)
 
                 HStack(spacing: 8) {
                     statusBadge
@@ -16,7 +17,7 @@ struct SiteRowView: View {
                     if site.issueCount > 0 {
                         Text("\(site.issueCount) issue\(site.issueCount == 1 ? "" : "s")")
                             .font(.caption)
-                            .foregroundColor(.orange)
+                            .foregroundColor(.spectreWarning)
                     }
                 }
             }
@@ -26,7 +27,7 @@ struct SiteRowView: View {
             VStack(alignment: .trailing, spacing: 4) {
                 Text(formattedValue)
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.spectreTextSecondary)
 
                 if site.deltaPct != 0 {
                     deltaView
@@ -35,12 +36,16 @@ struct SiteRowView: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(.spectreTextTertiary)
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(10)
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+        .padding(SpectreTheme.Spacing.md)
+        .background(SpectreTheme.cardBackground)
+        .cornerRadius(SpectreTheme.Radius.lg)
+        .overlay(
+            RoundedRectangle(cornerRadius: SpectreTheme.Radius.lg)
+                .stroke(SpectreTheme.borderSubtle, lineWidth: 1)
+        )
+        .shadow(color: SpectreTheme.cardShadow, radius: 6, x: 0, y: 3)
     }
 
     private var formattedValue: String {
@@ -69,13 +74,13 @@ struct SiteRowView: View {
     private var statusColorAndIcon: (Color, String) {
         switch site.healthStatus {
         case "critical":
-            return (.red, "exclamationmark.triangle.fill")
+            return (.spectreDestructive, "exclamationmark.triangle.fill")
         case "warning":
-            return (.orange, "exclamationmark.circle.fill")
+            return (.spectreWarning, "exclamationmark.circle.fill")
         case "healthy":
-            return (.green, "checkmark.circle.fill")
+            return (.spectreSuccess, "checkmark.circle.fill")
         default:
-            return (.blue, "checkmark.seal.fill")
+            return (.spectrePrimary, "checkmark.seal.fill")
         }
     }
 
@@ -87,6 +92,6 @@ struct SiteRowView: View {
             Text("\(String(format: "%.1f", abs(site.deltaPct)))%")
                 .font(.caption2)
         }
-        .foregroundColor(isPositive ? .green : .red)
+        .foregroundColor(isPositive ? .spectreSuccess : .spectreDestructive)
     }
 }

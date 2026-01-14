@@ -7,7 +7,7 @@ struct KPICardView: View {
     let color: Color
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: SpectreTheme.Spacing.sm) {
             Image(systemName: icon)
                 .font(.title2)
                 .foregroundColor(color)
@@ -15,16 +15,22 @@ struct KPICardView: View {
             Text(value)
                 .font(.title2)
                 .fontWeight(.bold)
+                .foregroundColor(.spectreText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
 
             Text(title)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(.spectreTextSecondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
+        .padding(.vertical, SpectreTheme.Spacing.md)
+        .background(SpectreTheme.cardBackground)
+        .cornerRadius(SpectreTheme.Radius.lg)
+        .overlay(
+            RoundedRectangle(cornerRadius: SpectreTheme.Radius.lg)
+                .stroke(SpectreTheme.borderSubtle, lineWidth: 1)
+        )
+        .shadow(color: SpectreTheme.cardShadow, radius: 6, x: 0, y: 3)
     }
 }

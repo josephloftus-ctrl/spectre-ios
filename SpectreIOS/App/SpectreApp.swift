@@ -18,6 +18,8 @@ struct SpectreApp: App {
         WindowGroup {
             DashboardView()
                 .environmentObject(api)
+                .preferredColorScheme(.dark) // Force dark mode
+                .tint(.spectrePrimary) // Set accent color
         }
         .modelContainer(sharedModelContainer)
     }

@@ -22,8 +22,10 @@ struct DashboardView: View {
     private var dashboardTab: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
+                Color.spectreBackground.ignoresSafeArea()
+
                 ScrollView {
-                    VStack(spacing: 16) {
+                    VStack(spacing: SpectreTheme.Spacing.md) {
                         kpiCardsSection
                         siteListSection
                     }
@@ -36,7 +38,9 @@ struct DashboardView: View {
 
                 HelpdeskBarView(viewModel: helpdeskVM)
             }
-            .navigationTitle("Spectre")
+            .navigationTitle("Steady")
+            .toolbarBackground(SpectreTheme.background, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .task {
                 dashboardVM.api = api
                 helpdeskVM.api = api
@@ -76,9 +80,10 @@ struct DashboardView: View {
     }
 
     private var siteListSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: SpectreTheme.Spacing.sm) {
             Text("Sites")
                 .font(.headline)
+                .foregroundColor(.spectreText)
                 .padding(.horizontal, 4)
 
             if dashboardVM.isLoading && dashboardVM.sites.isEmpty {
@@ -97,15 +102,15 @@ struct DashboardView: View {
     }
 
     private var emptyStateView: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: SpectreTheme.Spacing.sm) {
             Image(systemName: "building.2")
                 .font(.largeTitle)
-                .foregroundColor(.secondary)
+                .foregroundColor(.spectreTextSecondary)
             Text("No sites found")
-                .foregroundColor(.secondary)
+                .foregroundColor(.spectreTextSecondary)
             Text("Check your backend connection in Settings")
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(.spectreTextTertiary)
         }
         .frame(maxWidth: .infinity, minHeight: 100)
     }

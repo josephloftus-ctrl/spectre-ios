@@ -1,6 +1,6 @@
-name: SpectreIOS
+name: Steady
 options:
-  bundleIdPrefix: com.spectre
+  bundleIdPrefix: com.steady
   deploymentTarget:
     iOS: "17.0"
   xcodeVersion: "15.0"
@@ -11,21 +11,21 @@ settings:
   base:
     SWIFT_VERSION: "5.9"
     TARGETED_DEVICE_FAMILY: "1,2"
-    INFOPLIST_FILE: SpectreIOS/Info.plist
+    INFOPLIST_FILE: Steady/Info.plist
 
 targets:
-  SpectreIOS:
+  Steady:
     type: application
     platform: iOS
     sources:
-      - path: SpectreIOS
+      - path: Steady
         excludes:
           - "**/.DS_Store"
     resources:
-      - path: SpectreIOS/Resources/Assets.xcassets
+      - path: Steady/Resources/Assets.xcassets
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.spectre.ios
+        PRODUCT_BUNDLE_IDENTIFIER: com.steady.ios
         MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
         DEVELOPMENT_TEAM: ""
@@ -34,7 +34,7 @@ targets:
         CODE_SIGNING_ALLOWED: "NO"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     info:
-      path: SpectreIOS/Info.plist
+      path: Steady/Info.plist
       properties:
         CFBundleDisplayName: Steady
         CFBundleShortVersionString: "1.0.0"

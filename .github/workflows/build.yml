@@ -26,18 +26,7 @@ jobs:
       - name: Generate Xcode Project
         run: xcodegen generate
 
-      - name: Build for Simulator
-        run: |
-          xcodebuild build \
-            -project Steady.xcodeproj \
-            -scheme Steady \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
-            -configuration Debug \
-            CODE_SIGNING_ALLOWED=NO \
-            | xcpretty
-
       - name: Build for Device (Unsigned)
-        if: github.event_name == 'workflow_dispatch'
         run: |
           xcodebuild build \
             -project Steady.xcodeproj \
@@ -51,7 +40,6 @@ jobs:
             | xcpretty
 
       - name: Create IPA
-        if: github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p build/Payload
           cp -r build/DerivedData/Build/Products/Release-iphoneos/Steady.app build/Payload/
@@ -59,17 +47,8 @@ jobs:
           ls -la
 
       - name: Upload IPA
-        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: Steady-IPA
           path: build/Steady.ipa
           retention-days: 30
-
-      - name: Upload Simulator App
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
-        with:
-          name: Steady-Simulator
-          path: build/DerivedData/Build/Products/Debug-iphonesimulator/Steady.app
-          retention-days: 7

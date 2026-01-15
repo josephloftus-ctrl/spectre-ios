@@ -14,7 +14,7 @@ struct InventorySummary: Codable {
     }
 }
 
-struct SiteSummary: Codable, Identifiable {
+struct SiteSummary: Codable, Identifiable, Hashable {
     var id: String { site }
 
     let site: String
@@ -35,5 +35,13 @@ struct SiteSummary: Codable, Identifiable {
         case healthScore = "health_score"
         case healthStatus = "health_status"
         case roomFlagCount = "room_flag_count"
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(site)
+    }
+
+    static func == (lhs: SiteSummary, rhs: SiteSummary) -> Bool {
+        lhs.site == rhs.site
     }
 }

@@ -31,6 +31,12 @@ class SteadyAPI: ObservableObject {
         return try await client.get(url: url)
     }
 
+    func fetchSiteDetail(siteId: String) async throws -> SiteDetail {
+        guard let base = baseURL else { throw NetworkError.invalidURL }
+        let url = base.appendingPathComponent("api/sites/\(siteId)")
+        return try await client.get(url: url)
+    }
+
     // MARK: - Helpdesk
 
     func askHelpdesk(question: String) async throws -> HelpdeskResponse {
@@ -41,6 +47,23 @@ class SteadyAPI: ObservableObject {
             "question": question,
             "include_sources": "true"
         ]
+
+        return try await client.postForm(url: url, formData: formData)
+    }
+
+    // MARK: - Chat
+
+    func chat(message: String, history: [ChatHistoryItem]?) async throws -> ChatResponse {
+        guard let base = baseURL else { throw NetworkError.invalidURL }
+        let url = base.appendingPathComponent("api/ai/chat")
+
+        var formData = ["message": message]
+        if let history = history, !history.isEmpty {
+            let historyJSON = try? JSONEncoder().encode(history)
+            if let data = historyJSON, let str = String(data: data, encoding: .utf8) {
+                formData["history"] = str
+            }
+        }
 
         return try await client.postForm(url: url, formData: formData)
     }
@@ -97,5 +120,33 @@ class SteadyAPI: ObservableObject {
         }
 
         return try await client.postForm(url: url, formData: formData)
+    }
+
+    // MARK: - Standup
+
+    func fetchStandup(forceRefresh: Bool = false) async throws -> StandupResponse {
+        guard let base = baseURL else { throw NetworkError.invalidURL }
+        var url = base.appendingPathComponent("api/standup")
+        if forceRefresh {
+            url = url.appending(queryItems: [URLQueryItem(name: "refresh", value: "true")])
+        }
+        return try await client.get(url: url)
+    }
+
+    func rerollStandupSection(section: String) async throws -> StandupResponse {
+        guard let base = baseURL else { throw NetworkError.invalidURL }
+        let url = base.appendingPathComponent("api/standup/reroll/\(section)")
+        return try await client.postForm(url: url, formData: [:])
+    }
+
+    // MARK: - History
+
+    func fetchHistory(siteId: String? = nil) async throws -> HistoryResponse {
+        guard let base = baseURL else { throw NetworkError.invalidURL }
+        var url = base.appendingPathComponent("api/history")
+        if let siteId = siteId {
+            url = url.appending(queryItems: [URLQueryItem(name: "site_id", value: siteId)])
+        }
+        return try await client.get(url: url)
     }
 }

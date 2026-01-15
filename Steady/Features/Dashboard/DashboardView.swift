@@ -13,19 +13,19 @@ struct DashboardView: View {
                     Label("Dashboard", systemImage: "chart.bar.fill")
                 }
 
+            ChatView()
+                .tabItem {
+                    Label("Assistant", systemImage: "sparkles")
+                }
+
+            StandupView()
+                .tabItem {
+                    Label("Standup", systemImage: "sun.max.fill")
+                }
+
             NotesView()
                 .tabItem {
                     Label("Notes", systemImage: "note.text")
-                }
-
-            CountSessionsView()
-                .tabItem {
-                    Label("Count", systemImage: "list.clipboard")
-                }
-
-            SearchView()
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
                 }
 
             SettingsView()
@@ -36,13 +36,14 @@ struct DashboardView: View {
     }
 
     private var dashboardTab: some View {
-        NavigationView {
+        NavigationStack {
             ZStack(alignment: .bottom) {
                 Color.steadyBackground.ignoresSafeArea()
 
                 ScrollView {
                     VStack(spacing: SteadyTheme.Spacing.md) {
                         kpiCardsSection
+                        quickLinksSection
                         siteListSection
                     }
                     .padding()
@@ -67,6 +68,9 @@ struct DashboardView: View {
             .navigationTitle("Steady")
             .toolbarBackground(SteadyTheme.background, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .navigationDestination(for: SiteSummary.self) { site in
+                SiteDetailView(site: site)
+            }
             .task {
                 dashboardVM.api = api
                 helpdeskVM.api = api
@@ -105,12 +109,58 @@ struct DashboardView: View {
         }
     }
 
+    private var quickLinksSection: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: SteadyTheme.Spacing.sm) {
+                NavigationLink(destination: CountSessionsView()) {
+                    quickLinkCard(icon: "list.clipboard", title: "Count", color: .steadySuccess)
+                }
+
+                NavigationLink(destination: SearchView()) {
+                    quickLinkCard(icon: "magnifyingglass", title: "Search", color: .steadyInfo)
+                }
+
+                NavigationLink(destination: HistoryView()) {
+                    quickLinkCard(icon: "chart.line.uptrend.xyaxis", title: "Trends", color: .steadyPrimary)
+                }
+            }
+        }
+    }
+
+    private func quickLinkCard(icon: String, title: String, color: Color) -> some View {
+        VStack(spacing: SteadyTheme.Spacing.xs) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundColor(color)
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.steadyTextSecondary)
+        }
+        .frame(width: 80, height: 70)
+        .background(SteadyTheme.cardBackground)
+        .cornerRadius(SteadyTheme.Radius.md)
+        .overlay(
+            RoundedRectangle(cornerRadius: SteadyTheme.Radius.md)
+                .stroke(SteadyTheme.borderSubtle, lineWidth: 1)
+        )
+    }
+
     private var siteListSection: some View {
         VStack(alignment: .leading, spacing: SteadyTheme.Spacing.sm) {
-            Text("Sites")
-                .font(.headline)
-                .foregroundColor(.steadyText)
-                .padding(.horizontal, 4)
+            HStack {
+                Text("Sites")
+                    .font(.headline)
+                    .foregroundColor(.steadyText)
+
+                Spacer()
+
+                if !dashboardVM.sites.isEmpty {
+                    Text("\(dashboardVM.sites.count) total")
+                        .font(.caption)
+                        .foregroundColor(.steadyTextSecondary)
+                }
+            }
+            .padding(.horizontal, 4)
 
             if dashboardVM.isLoading && dashboardVM.sites.isEmpty {
                 ProgressView()
@@ -120,7 +170,10 @@ struct DashboardView: View {
             } else {
                 LazyVStack(spacing: 8) {
                     ForEach(dashboardVM.sites) { site in
-                        SiteRowView(site: site)
+                        NavigationLink(value: site) {
+                            SiteRowView(site: site)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }

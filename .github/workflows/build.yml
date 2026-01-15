@@ -29,8 +29,8 @@ jobs:
       - name: Build for Simulator
         run: |
           xcodebuild build \
-            -project SpectreIOS.xcodeproj \
-            -scheme SpectreIOS \
+            -project Steady.xcodeproj \
+            -scheme Steady \
             -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
@@ -40,8 +40,8 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           xcodebuild build \
-            -project SpectreIOS.xcodeproj \
-            -scheme SpectreIOS \
+            -project Steady.xcodeproj \
+            -scheme Steady \
             -destination 'generic/platform=iOS' \
             -configuration Release \
             -derivedDataPath build/DerivedData \
@@ -54,22 +54,22 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p build/Payload
-          cp -r build/DerivedData/Build/Products/Release-iphoneos/SpectreIOS.app build/Payload/
-          cd build && zip -r SpectreIOS.ipa Payload
+          cp -r build/DerivedData/Build/Products/Release-iphoneos/Steady.app build/Payload/
+          cd build && zip -r Steady.ipa Payload
           ls -la
 
       - name: Upload IPA
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: SpectreIOS-IPA
-          path: build/SpectreIOS.ipa
+          name: Steady-IPA
+          path: build/Steady.ipa
           retention-days: 30
 
       - name: Upload Simulator App
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: SpectreIOS-Simulator
-          path: build/DerivedData/Build/Products/Debug-iphonesimulator/SpectreIOS.app
+          name: Steady-Simulator
+          path: build/DerivedData/Build/Products/Debug-iphonesimulator/Steady.app
           retention-days: 7

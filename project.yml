@@ -52,3 +52,5 @@ targets:
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
           NSAllowsArbitraryLoads: true
+        NSCameraUsageDescription: "Camera is used for AR zone counting - point at storage areas to see and count inventory"
+        NSPhotoLibraryUsageDescription: "Photo library access for saving inventory reports"

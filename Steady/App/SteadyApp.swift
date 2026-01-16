@@ -11,6 +11,13 @@ struct SteadyApp: App {
             ScanSession.self,
             Note.self,
             CountSession.self,
+            // ZoneCount models
+            ZCSite.self,
+            ZCZone.self,
+            ZCItem.self,
+            ZCZoneItem.self,
+            ZCCountSession.self,
+            ZCCountEntry.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         return try! ModelContainer(for: schema, configurations: [modelConfiguration])

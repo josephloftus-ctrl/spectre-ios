@@ -92,7 +92,7 @@ class ARViewCoordinator: NSObject {
             if let entity = arView.entity(at: location) {
                 // Find the zone associated with this entity
                 for (zoneId, blobEntity) in zoneEntities {
-                    if entity.isDescendant(of: blobEntity) || entity == blobEntity {
+                    if isEntity(entity, descendantOf: blobEntity) || entity == blobEntity {
                         if let zone = arCoordinator.zoneMap[zoneId] {
                             // Animate blob
                             animateBlobTap(blobEntity)
@@ -194,5 +194,16 @@ class ARViewCoordinator: NSObject {
                 timingFunction: .easeInOut
             )
         }
+    }
+
+    private func isEntity(_ entity: Entity, descendantOf ancestor: Entity) -> Bool {
+        var current = entity.parent
+        while let parent = current {
+            if parent == ancestor {
+                return true
+            }
+            current = parent.parent
+        }
+        return false
     }
 }

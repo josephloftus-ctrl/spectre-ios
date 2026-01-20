@@ -17,6 +17,11 @@ class AppSettings {
     static let defaultBackendURL = "https://api.josephloftus.com"
 
     // Cloudflare Access credentials
-    static let cfAccessClientId = "ab7daeaba96c1b5c003abc43a2e51e21.access"
-    static let cfAccessClientSecret = "c2318a24672f9dcbb3063ee3287a46326f789178b57978f5e6e19a16661335e4"
+    static var cfAccessClientId: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFAccessClientId") as? String ?? ""
+    }
+    
+    static var cfAccessClientSecret: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFAccessClientSecret") as? String ?? ""
+    }
 }

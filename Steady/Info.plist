@@ -7,5 +7,9 @@
         <key>NSAllowsLocalNetworking</key>
         <true/>
     </dict>
+    <key>CFAccessClientId</key>
+    <string>$(CF_ACCESS_CLIENT_ID)</string>
+    <key>CFAccessClientSecret</key>
+    <string>$(CF_ACCESS_CLIENT_SECRET)</string>
 </dict>
 </plist>

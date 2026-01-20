@@ -37,11 +37,10 @@ actor APIClient {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
 
-        let bodyString = formData
-            .map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? $0.value)" }
-            .joined(separator: "&")
-
-        request.httpBody = bodyString.data(using: .utf8)
+        var components = URLComponents()
+        components.queryItems = formData.map { URLQueryItem(name: $0.key, value: $0.value) }
+        
+        request.httpBody = components.percentEncodedQuery?.data(using: .utf8)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue(AppSettings.cfAccessClientId, forHTTPHeaderField: "CF-Access-Client-Id")

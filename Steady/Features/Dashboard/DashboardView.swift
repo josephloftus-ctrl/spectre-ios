@@ -112,8 +112,12 @@ struct DashboardView: View {
     private var quickLinksSection: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: SteadyTheme.Spacing.sm) {
+                NavigationLink(destination: ZCSitesListView()) {
+                    quickLinkCard(icon: "arkit", title: "ZoneCount", color: .steadySuccess)
+                }
+
                 NavigationLink(destination: CountSessionsView()) {
-                    quickLinkCard(icon: "list.clipboard", title: "Count", color: .steadySuccess)
+                    quickLinkCard(icon: "list.clipboard", title: "Sessions", color: .steadyWarning)
                 }
 
                 NavigationLink(destination: SearchView()) {

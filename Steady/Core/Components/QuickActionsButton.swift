@@ -30,8 +30,8 @@ struct QuickActionsButton: View {
                     .transition(.scale.combined(with: .opacity))
 
                     quickActionItem(
-                        icon: "list.clipboard",
-                        label: "Start Count",
+                        icon: "arkit",
+                        label: "ZoneCount",
                         color: .steadySuccess
                     ) {
                         showingNewCount = true
@@ -60,7 +60,7 @@ struct QuickActionsButton: View {
             QuickNoteSheet()
         }
         .sheet(isPresented: $showingNewCount) {
-            NewCountSessionView()
+            ZCSitesListView()
         }
     }
 

@@ -100,8 +100,26 @@ struct XLSXWriter {
         // Remove original XLSX and repack
         try FileManager.default.removeItem(at: xlsxURL)
 
-        // Create new ZIP with modified contents
-        try FileManager.default.zipItem(at: tempDir, to: xlsxURL)
+        // Create new ZIP with contents at root level (not nested in folder)
+        guard let archive = Archive(url: xlsxURL, accessMode: .create) else {
+            throw XLSXWriterError.writeFailed("Could not create archive")
+        }
+
+        let fileManager = FileManager.default
+        let enumerator = fileManager.enumerator(at: tempDir, includingPropertiesForKeys: nil)
+
+        while let fileURL = enumerator?.nextObject() as? URL {
+            let relativePath = fileURL.path.replacingOccurrences(of: tempDir.path + "/", with: "")
+
+            if fileURL.hasDirectoryPath {
+                try archive.addEntry(with: relativePath + "/", type: .directory, uncompressedSize: 0, provider: { _, _ in Data() })
+            } else {
+                let fileData = try Data(contentsOf: fileURL)
+                try archive.addEntry(with: relativePath, type: .file, uncompressedSize: Int64(fileData.count), provider: { position, size in
+                    fileData.subdata(in: Int(position)..<Int(position)+size)
+                })
+            }
+        }
     }
 
     private static func updateCellValue(in xml: String, cellRef: String, newValue: String) -> String {

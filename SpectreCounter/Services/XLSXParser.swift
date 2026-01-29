@@ -21,6 +21,11 @@ enum XLSXParserError: LocalizedError {
     }
 }
 
+struct ParseResult {
+    let items: [InventoryItem]
+    let quantityColumn: String  // Column letter (e.g., "E")
+}
+
 struct XLSXParser {
 
     // Expected column headers (MOG template)
@@ -37,7 +42,7 @@ struct XLSXParser {
         "Place": "place"
     ]
 
-    static func parse(url: URL) throws -> [InventoryItem] {
+    static func parse(url: URL) throws -> ParseResult {
         guard let file = XLSXFile(filepath: url.path) else {
             throw XLSXParserError.fileNotFound
         }
@@ -56,25 +61,29 @@ struct XLSXParser {
             throw XLSXParserError.noDataRows
         }
 
-        // Parse header row to find column indices
+        // Parse header row to find column indices and letters
         let headerRow = rows[0]
         var columnIndices: [String: Int] = [:]
+        var columnLetters: [String: String] = [:]
 
         for cell in headerRow.cells {
             if let value = cell.stringValue(sharedStrings) {
                 if let mappedName = columnMap[value] {
                     let colRef = cell.reference.column
                     columnIndices[mappedName] = colRef.index
+                    columnLetters[mappedName] = colRef.value
                 }
             }
         }
 
-        // Verify required columns
-        let required = ["itemDescription", "distNumber"]
+        // Verify required columns (including quantity for export)
+        let required = ["itemDescription", "distNumber", "quantity"]
         let missing = required.filter { columnIndices[$0] == nil }
         if !missing.isEmpty {
             throw XLSXParserError.missingRequiredColumns(missing)
         }
+
+        let quantityColumn = columnLetters["quantity"]!
 
         // Parse data rows
         var items: [InventoryItem] = []
@@ -109,7 +118,7 @@ struct XLSXParser {
             throw XLSXParserError.noDataRows
         }
 
-        return items
+        return ParseResult(items: items, quantityColumn: quantityColumn)
     }
 
     private static func parseCellValues(row: Row, sharedStrings: SharedStrings?) -> [Int: String] {

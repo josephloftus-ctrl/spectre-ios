@@ -123,14 +123,18 @@ struct ImportView: View {
             }
             try FileManager.default.copyItem(at: url, to: localURL)
 
-            let items = try XLSXParser.parse(url: localURL)
+            let parseResult = try XLSXParser.parse(url: localURL)
 
             for session in sessions {
                 modelContext.delete(session)
             }
 
-            let session = CountSession(sourceFilename: url.lastPathComponent)
-            session.items = items
+            let session = CountSession(
+                sourceFilename: url.lastPathComponent,
+                quantityColumn: parseResult.quantityColumn,
+                templatePath: localURL.path
+            )
+            session.items = parseResult.items
             modelContext.insert(session)
 
             try modelContext.save()

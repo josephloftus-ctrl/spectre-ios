@@ -103,7 +103,7 @@ struct ExportView: View {
         isExporting = true
 
         do {
-            let url = try XLSXWriter.exportCSV(items: session.items)
+            let url = try XLSXWriter.export(session: session)
             exportURL = url
             isExporting = false
             showShareSheet = true

@@ -125,8 +125,8 @@ struct XLSXWriter {
     }
 
     private static func insertCell(in xml: String, cellRef: String, value: String) -> String {
-        // Extract row number from cell reference (e.g., "E2" -> 2)
-        let rowNum = cellRef.dropFirst(while: { $0.isLetter })
+        // Extract row number from cell reference (e.g., "E2" -> "2")
+        let rowNum = String(cellRef.drop(while: { $0.isLetter }))
 
         // Find the row element and insert the cell
         let rowPattern = #"(<row[^>]*\sr="\#(rowNum)"[^>]*>)(.*?)(</row>)"#

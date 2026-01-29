@@ -112,11 +112,12 @@ struct XLSXWriter {
             let relativePath = fileURL.path.replacingOccurrences(of: tempDir.path + "/", with: "")
 
             if fileURL.hasDirectoryPath {
-                try archive.addEntry(with: relativePath + "/", type: .directory, uncompressedSize: 0, provider: { _, _ in Data() })
+                // Skip directories - they're created implicitly
+                continue
             } else {
                 let fileData = try Data(contentsOf: fileURL)
-                try archive.addEntry(with: relativePath, type: .file, uncompressedSize: Int64(fileData.count), provider: { position, size in
-                    fileData.subdata(in: Int(position)..<Int(position)+size)
+                try archive.addEntry(with: relativePath, type: .file, uncompressedSize: Int64(fileData.count), bufferSize: 16384, provider: { position, size in
+                    fileData.subdata(in: Data.Index(position)..<Data.Index(position)+size)
                 })
             }
         }

@@ -6,13 +6,13 @@ final class CountSession {
     var id: UUID
     var importedAt: Date
     var sourceFilename: String
-    var quantityColumn: String  // Column letter (e.g., "E") for quantity
-    var templatePath: String    // Path to saved original template
+    var quantityColumn: String = ""   // Column letter (e.g., "E") for quantity
+    var templatePath: String = ""     // Path to saved original template
 
     @Relationship(deleteRule: .cascade)
     var items: [InventoryItem]
 
-    init(sourceFilename: String, quantityColumn: String, templatePath: String) {
+    init(sourceFilename: String, quantityColumn: String = "", templatePath: String = "") {
         self.id = UUID()
         self.importedAt = Date()
         self.sourceFilename = sourceFilename

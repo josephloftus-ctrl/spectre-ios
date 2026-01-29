@@ -4,6 +4,7 @@ import ZIPFoundation
 enum XLSXWriterError: LocalizedError {
     case templateNotFound
     case invalidTemplate
+    case legacySession
     case writeFailed(String)
 
     var errorDescription: String? {
@@ -12,6 +13,8 @@ enum XLSXWriterError: LocalizedError {
             return "Original template not found"
         case .invalidTemplate:
             return "Template is not a valid XLSX file"
+        case .legacySession:
+            return "Please re-import the worksheet to enable export"
         case .writeFailed(let reason):
             return "Failed to write XLSX: \(reason)"
         }
@@ -22,6 +25,11 @@ struct XLSXWriter {
 
     /// Export by modifying the original template - only updates quantity cells
     static func export(session: CountSession) throws -> URL {
+        // Check for legacy session (missing template info)
+        guard !session.templatePath.isEmpty, !session.quantityColumn.isEmpty else {
+            throw XLSXWriterError.legacySession
+        }
+
         // Verify template exists
         let templateURL = URL(fileURLWithPath: session.templatePath)
         guard FileManager.default.fileExists(atPath: templateURL.path) else {

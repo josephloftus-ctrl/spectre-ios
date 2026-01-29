@@ -41,7 +41,7 @@ jobs:
 
       - name: Ad-hoc Sign for Sideloading
         run: |
-          APP_PATH="build/DerivedData/Build/Products/Release-iphoneos/Steady.app"
+          APP_PATH="build/DerivedData/Build/Products/Release-iphoneos/SpectreCounter.app"
 
           # Create minimal entitlements for sideloading
           cat > build/entitlements.plist << 'EOF'
@@ -72,7 +72,7 @@ jobs:
 
           # Verify IPA structure
           echo "=== IPA Contents ==="
-          unzip -l Steady.ipa | head -20
+          unzip -l SpectreCounter.ipa | head -20
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4

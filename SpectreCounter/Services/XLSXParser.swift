@@ -63,9 +63,8 @@ struct XLSXParser {
         for cell in headerRow.cells {
             if let value = cell.stringValue(sharedStrings) {
                 if let mappedName = columnMap[value] {
-                    if let colRef = cell.reference.column {
-                        columnIndices[mappedName] = colRef.index
-                    }
+                    let colRef = cell.reference.column
+                    columnIndices[mappedName] = colRef.index
                 }
             }
         }
@@ -116,8 +115,8 @@ struct XLSXParser {
     private static func parseCellValues(row: Row, sharedStrings: SharedStrings?) -> [Int: String] {
         var values: [Int: String] = [:]
         for cell in row.cells {
-            if let colRef = cell.reference.column,
-               let value = cell.stringValue(sharedStrings) {
+            let colRef = cell.reference.column
+            if let value = cell.stringValue(sharedStrings) {
                 values[colRef.index] = value
             }
         }

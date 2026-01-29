@@ -2,7 +2,7 @@ name: Build iOS App
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, 'feature/**']
   pull_request:
     branches: [main, master]
   workflow_dispatch:
@@ -29,8 +29,8 @@ jobs:
       - name: Build for Device (Unsigned)
         run: |
           xcodebuild build \
-            -project Steady.xcodeproj \
-            -scheme Steady \
+            -project SpectreCounter.xcodeproj \
+            -scheme SpectreCounter \
             -destination 'generic/platform=iOS' \
             -configuration Release \
             -derivedDataPath build/DerivedData \
@@ -42,13 +42,13 @@ jobs:
       - name: Create IPA
         run: |
           mkdir -p build/Payload
-          cp -r build/DerivedData/Build/Products/Release-iphoneos/Steady.app build/Payload/
-          cd build && zip -r Steady.ipa Payload
+          cp -r build/DerivedData/Build/Products/Release-iphoneos/SpectreCounter.app build/Payload/
+          cd build && zip -r SpectreCounter.ipa Payload
           ls -la
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: Steady-IPA
-          path: build/Steady.ipa
+          name: SpectreCounter-IPA
+          path: build/SpectreCounter.ipa
           retention-days: 30

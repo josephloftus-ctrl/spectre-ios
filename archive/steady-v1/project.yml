@@ -1,6 +1,6 @@
-name: SpectreCounter
+name: Steady
 options:
-  bundleIdPrefix: com.spectre
+  bundleIdPrefix: com.steady
   deploymentTarget:
     iOS: "17.0"
   xcodeVersion: "15.0"
@@ -11,29 +11,21 @@ settings:
   base:
     SWIFT_VERSION: "5.9"
     TARGETED_DEVICE_FAMILY: "1,2"
-    INFOPLIST_FILE: SpectreCounter/Info.plist
-
-packages:
-  CoreXLSX:
-    url: https://github.com/CoreOffice/CoreXLSX
-    from: "0.14.0"
+    INFOPLIST_FILE: Steady/Info.plist
 
 targets:
-  SpectreCounter:
+  Steady:
     type: application
     platform: iOS
     sources:
-      - path: SpectreCounter
+      - path: Steady
         excludes:
           - "**/.DS_Store"
-          - "Resources/**"
     resources:
-      - path: SpectreCounter/Resources/Assets.xcassets
-    dependencies:
-      - package: CoreXLSX
+      - path: Steady/Resources/Assets.xcassets
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.spectre.counter
+        PRODUCT_BUNDLE_IDENTIFIER: com.steady.ios
         MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
         DEVELOPMENT_TEAM: ""
@@ -42,9 +34,9 @@ targets:
         CODE_SIGNING_ALLOWED: "NO"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     info:
-      path: SpectreCounter/Info.plist
+      path: Steady/Info.plist
       properties:
-        CFBundleDisplayName: Spectre Counter
+        CFBundleDisplayName: Steady
         CFBundleShortVersionString: "1.0.0"
         CFBundleVersion: "1"
         UILaunchScreen: {}
@@ -57,6 +49,8 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        LSSupportsOpeningDocumentsInPlace: true
-        UIFileSharingEnabled: true
-        UISupportsDocumentBrowser: true
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+          NSAllowsArbitraryLoads: true
+        NSCameraUsageDescription: "Camera is used for AR zone counting - point at storage areas to see and count inventory"
+        NSPhotoLibraryUsageDescription: "Photo library access for saving inventory reports"

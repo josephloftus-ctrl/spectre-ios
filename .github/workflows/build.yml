@@ -39,30 +39,6 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
-      - name: Ad-hoc Sign for Sideloading
-        run: |
-          APP_PATH="build/DerivedData/Build/Products/Release-iphoneos/SpectreCounter.app"
-
-          # Create minimal entitlements for sideloading
-          cat > build/entitlements.plist << 'EOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>application-identifier</key>
-            <string>*</string>
-            <key>get-task-allow</key>
-            <true/>
-          </dict>
-          </plist>
-          EOF
-
-          # Ad-hoc sign with entitlements (creates signature structure for sideloading tools)
-          codesign --force --deep --sign - --entitlements build/entitlements.plist "$APP_PATH"
-
-          # Verify signature structure exists
-          codesign -dv "$APP_PATH" 2>&1 || true
-
       - name: Create IPA
         run: |
           mkdir -p build/Payload

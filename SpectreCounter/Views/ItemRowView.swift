@@ -57,9 +57,12 @@ struct ItemRowView: View {
         .contentShape(Rectangle())
         .offset(x: dragOffset)
         .gesture(
-            DragGesture()
+            DragGesture(minimumDistance: 20, coordinateSpace: .local)
                 .onChanged { value in
-                    dragOffset = value.translation.width
+                    // Only allow horizontal swipes, ignore vertical (for scrolling)
+                    if abs(value.translation.width) > abs(value.translation.height) {
+                        dragOffset = value.translation.width
+                    }
                 }
                 .onEnded { value in
                     withAnimation(.spring(response: 0.3)) {

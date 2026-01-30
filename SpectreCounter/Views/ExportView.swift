@@ -102,15 +102,21 @@ struct ExportView: View {
     private func exportFile() {
         isExporting = true
 
-        do {
-            let url = try XLSXWriter.export(session: session)
-            exportURL = url
-            isExporting = false
-            showShareSheet = true
-        } catch {
-            errorMessage = error.localizedDescription
-            isExporting = false
-            showError = true
+        Task.detached(priority: .userInitiated) {
+            do {
+                let url = try XLSXWriter.export(session: session)
+                await MainActor.run {
+                    exportURL = url
+                    isExporting = false
+                    showShareSheet = true
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = error.localizedDescription
+                    isExporting = false
+                    showError = true
+                }
+            }
         }
     }
 }
